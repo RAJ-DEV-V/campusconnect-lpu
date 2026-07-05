@@ -1,10 +1,23 @@
+import Sidebar from "../components/dashboard/Sidebar";
+import Topbar from "../components/dashboard/Topbar";
+import WelcomeCard from "../components/dashboard/WelcomeCard";
+import StatsCard from "../components/dashboard/StatsCard";
+
 export default function Dashboard() {
   return (
-    <div className="min-h-screen flex items-center justify-center">
+    <div className="flex min-h-screen bg-slate-100">
 
-      <h1 className="text-5xl font-bold">
-        Dashboard
-      </h1>
+      <Sidebar />
+
+      <main className="flex-1 p-8 space-y-8">
+
+        <Topbar />
+
+        <WelcomeCard />
+
+        <StatsCard />
+
+      </main>
 
     </div>
   );
