@@ -1,13 +1,45 @@
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+
 import { signOut } from "../../services/auth";
+import { getPendingRequestCount } from "../../services/connectionService";
 
 export default function Sidebar() {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const [pendingCount, setPendingCount] = useState(0);
+
+  useEffect(() => {
+    async function loadCount() {
+      const count = await getPendingRequestCount();
+      setPendingCount(count);
+    }
+
+    loadCount();
+  }, []);
 
   async function handleLogout() {
     await signOut();
     navigate("/landing");
   }
+
+  const navButton = (path, icon, label, badge = null) => (
+    <button
+      onClick={() => navigate(path)}
+      className={`flex w-full items-center justify-between rounded-xl px-4 py-3 transition ${
+        location.pathname === path
+          ? "bg-blue-600 text-white"
+          : "text-slate-700 hover:bg-slate-100"
+      }`}
+    >
+      <span>
+        {icon} {label}
+      </span>
+
+      {badge}
+    </button>
+  );
 
   return (
     <aside className="flex min-h-screen w-64 flex-col border-r bg-white p-6">
@@ -21,57 +53,30 @@ export default function Sidebar() {
 
       <nav className="mt-10 flex-1 space-y-3">
 
-        <button
-          onClick={() => navigate("/dashboard")}
-          className="w-full rounded-xl bg-blue-600 py-3 text-white transition hover:bg-blue-700"
-        >
-          🏠 Dashboard
-        </button>
+        {navButton("/dashboard", "🏠", "Dashboard")}
 
-        <button
-          onClick={() => navigate("/members")}
-          className="w-full rounded-xl py-3 transition hover:bg-slate-100"
-        >
-          👥 Members
-        </button>
+        {navButton("/members", "👥", "Members")}
 
-        <button
-          onClick={() => navigate("/requests")}
-          className="w-full rounded-xl py-3 transition hover:bg-slate-100"
-        >
-          🔔 Requests
-        </button>
+        {navButton(
+          "/requests",
+          "🔔",
+          "Requests",
+          pendingCount > 0 ? (
+            <span className="rounded-full bg-red-500 px-2 py-1 text-xs font-bold text-white">
+              {pendingCount}
+            </span>
+          ) : null
+        )}
 
-        <button
-          onClick={() => navigate("/network")}
-          className="w-full rounded-xl py-3 transition hover:bg-slate-100"
-        >
-          🤝 My Network
-        </button>
+        {navButton("/network", "🤝", "My Network")}
 
-        <button
-          className="w-full rounded-xl py-3 transition hover:bg-slate-100"
-        >
-          🔍 Discover
-        </button>
+        {navButton("/community", "🌐", "Community")}
 
-        <button
-          className="w-full rounded-xl py-3 transition hover:bg-slate-100"
-        >
-          🌐 Community
-        </button>
+        {navButton("/admin", "👑", "Admin Panel")}
 
-        <button
-          className="w-full rounded-xl py-3 transition hover:bg-slate-100"
-        >
-          👤 My Profile
-        </button>
+        {navButton("/my-profile", "👤", "My Profile")}
 
-        <button
-          className="w-full rounded-xl py-3 transition hover:bg-slate-100"
-        >
-          ⚙️ Settings
-        </button>
+        {navButton("/settings", "⚙️", "Settings")}
 
       </nav>
 

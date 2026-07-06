@@ -5,10 +5,14 @@ import Dashboard from "./pages/Dashboard";
 import ProfileSetup from "./pages/ProfileSetup";
 import Members from "./pages/Members";
 import Profile from "./pages/Profile";
+import MyProfile from "./pages/MyProfile";
 import Requests from "./pages/Requests";
 import Network from "./pages/Network";
+import Community from "./pages/Community";
+import Admin from "./pages/Admin";
 
 import ProtectedRoute from "./components/ProtectedRoute";
+import AdminRoute from "./components/AdminRoute";
 import AuthRedirect from "./components/AuthRedirect";
 
 export default function App() {
@@ -56,6 +60,15 @@ export default function App() {
       />
 
       <Route
+        path="/my-profile"
+        element={
+          <ProtectedRoute>
+            <MyProfile />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
         path="/requests"
         element={
           <ProtectedRoute>
@@ -69,6 +82,26 @@ export default function App() {
         element={
           <ProtectedRoute>
             <Network />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/community"
+        element={
+          <ProtectedRoute>
+            <Community />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoute>
+            <AdminRoute>
+              <Admin />
+            </AdminRoute>
           </ProtectedRoute>
         }
       />

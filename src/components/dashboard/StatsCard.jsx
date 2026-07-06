@@ -1,40 +1,59 @@
 import { useEffect, useState } from "react";
-import { getMemberCount } from "../../services/dashboardService";
+
+import { getDashboardStats } from "../../services/dashboardService";
+import StatCard from "./StatCard";
 
 export default function StatsCard() {
-  const [members, setMembers] = useState(0);
+  const [stats, setStats] = useState({
+    members: 0,
+    connections: 0,
+    pending: 0,
+    announcements: 0,
+  });
 
   useEffect(() => {
-    async function loadData() {
-      const total = await getMemberCount();
-      setMembers(total);
+    async function loadStats() {
+      try {
+        const data = await getDashboardStats();
+        setStats(data);
+      } catch (err) {
+        console.error(err);
+      }
     }
 
-    loadData();
+    loadStats();
   }, []);
 
   return (
-    <div className="grid grid-cols-4 gap-6">
+    <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
 
-      <div className="rounded-2xl bg-white p-6 shadow">
-        <h3 className="text-slate-500">Members</h3>
-        <p className="mt-2 text-3xl font-bold">{members}</p>
-      </div>
+      <StatCard
+        title="Members"
+        value={stats.members}
+        icon="👥"
+        color="blue"
+      />
 
-      <div className="rounded-2xl bg-white p-6 shadow">
-        <h3 className="text-slate-500">Connections</h3>
-        <p className="mt-2 text-3xl font-bold">0</p>
-      </div>
+      <StatCard
+        title="Connections"
+        value={stats.connections}
+        icon="🤝"
+        color="green"
+      />
 
-      <div className="rounded-2xl bg-white p-6 shadow">
-        <h3 className="text-slate-500">Profile</h3>
-        <p className="mt-2 text-3xl font-bold">100%</p>
-      </div>
+      <StatCard
+        title="Pending Requests"
+        value={stats.pending}
+        icon="🔔"
+        color="orange"
+      />
 
-      <div className="rounded-2xl bg-white p-6 shadow">
-        <h3 className="text-slate-500">Community</h3>
-        <p className="mt-2 text-3xl font-bold">Join</p>
-      </div>
+      <StatCard
+        title="Announcements"
+        value={stats.announcements}
+        icon="📢"
+        color="purple"
+      />
 
     </div>
   );

@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import { supabase } from "../lib/supabase";
+
 import Sidebar from "../components/dashboard/Sidebar";
 import Topbar from "../components/dashboard/Topbar";
+import ConnectionButton from "../components/ConnectionButton";
 
 export default function Members() {
   const navigate = useNavigate();
@@ -15,6 +18,8 @@ export default function Members() {
       const {
         data: { user },
       } = await supabase.auth.getUser();
+
+      if (!user) return;
 
       const { data, error } = await supabase
         .from("profiles")
@@ -39,6 +44,7 @@ export default function Members() {
 
   return (
     <div className="flex min-h-screen bg-slate-100">
+
       <Sidebar />
 
       <main className="flex-1 p-8">
@@ -102,20 +108,25 @@ export default function Members() {
 
               <div className="mt-6 grid grid-cols-3 gap-3">
 
-                <button
-                  className="rounded-xl bg-green-600 px-4 py-3 font-semibold text-white transition hover:bg-green-700"
-                >
-                  + Connect
-                </button>
+                <ConnectionButton userId={member.id} />
 
-                <a
-                  href={member.linkedin_url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="rounded-xl bg-blue-600 px-4 py-3 text-center font-semibold text-white transition hover:bg-blue-700"
-                >
-                  LinkedIn
-                </a>
+                {member.linkedin_url ? (
+                  <a
+                    href={member.linkedin_url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="rounded-xl bg-blue-600 px-4 py-3 text-center font-semibold text-white transition hover:bg-blue-700"
+                  >
+                    LinkedIn
+                  </a>
+                ) : (
+                  <button
+                    disabled
+                    className="cursor-not-allowed rounded-xl bg-slate-400 px-4 py-3 font-semibold text-white"
+                  >
+                    No LinkedIn
+                  </button>
+                )}
 
                 <button
                   onClick={() => navigate(`/profile/${member.id}`)}
@@ -131,6 +142,7 @@ export default function Members() {
 
           {filteredMembers.length === 0 && (
             <div className="col-span-full rounded-2xl bg-white p-10 text-center shadow">
+
               <h2 className="text-2xl font-bold">
                 No members found
               </h2>
@@ -138,12 +150,14 @@ export default function Members() {
               <p className="mt-2 text-slate-500">
                 Try searching with another name.
               </p>
+
             </div>
           )}
 
         </div>
 
       </main>
+
     </div>
   );
 }
