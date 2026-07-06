@@ -4,6 +4,9 @@ import Landing from "./pages/Landing";
 import Dashboard from "./pages/Dashboard";
 import ProfileSetup from "./pages/ProfileSetup";
 import Members from "./pages/Members";
+import Profile from "./pages/Profile";
+import Requests from "./pages/Requests";
+import Network from "./pages/Network";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 import AuthRedirect from "./components/AuthRedirect";
@@ -39,6 +42,33 @@ export default function App() {
         element={
           <ProtectedRoute>
             <Members />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/profile/:id"
+        element={
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/requests"
+        element={
+          <ProtectedRoute>
+            <Requests />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/network"
+        element={
+          <ProtectedRoute>
+            <Network />
           </ProtectedRoute>
         }
       />

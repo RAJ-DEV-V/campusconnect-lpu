@@ -36,6 +36,20 @@ export default function Sidebar() {
         </button>
 
         <button
+          onClick={() => navigate("/requests")}
+          className="w-full rounded-xl py-3 transition hover:bg-slate-100"
+        >
+          🔔 Requests
+        </button>
+
+        <button
+          onClick={() => navigate("/network")}
+          className="w-full rounded-xl py-3 transition hover:bg-slate-100"
+        >
+          🤝 My Network
+        </button>
+
+        <button
           className="w-full rounded-xl py-3 transition hover:bg-slate-100"
         >
           🔍 Discover

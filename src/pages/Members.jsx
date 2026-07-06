@@ -1,17 +1,25 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import Sidebar from "../components/dashboard/Sidebar";
 import Topbar from "../components/dashboard/Topbar";
 
 export default function Members() {
+  const navigate = useNavigate();
+
   const [members, setMembers] = useState([]);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
     async function loadMembers() {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
       const { data, error } = await supabase
         .from("profiles")
         .select("*")
+        .neq("id", user.id)
         .order("created_at", { ascending: false });
 
       if (error) {
@@ -92,18 +100,25 @@ export default function Members() {
 
               </div>
 
-              <div className="mt-6 flex gap-3">
+              <div className="mt-6 grid grid-cols-3 gap-3">
+
+                <button
+                  className="rounded-xl bg-green-600 px-4 py-3 font-semibold text-white transition hover:bg-green-700"
+                >
+                  + Connect
+                </button>
 
                 <a
                   href={member.linkedin_url}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex-1 rounded-xl bg-blue-600 px-4 py-3 text-center font-semibold text-white transition hover:bg-blue-700"
+                  className="rounded-xl bg-blue-600 px-4 py-3 text-center font-semibold text-white transition hover:bg-blue-700"
                 >
                   LinkedIn
                 </a>
 
                 <button
+                  onClick={() => navigate(`/profile/${member.id}`)}
                   className="rounded-xl border px-4 py-3 transition hover:bg-slate-100"
                 >
                   View
